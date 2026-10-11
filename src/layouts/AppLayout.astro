@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import { Activity, ArrowUpRight, BarChart3, BookOpen, Library, Users } from 'lucide-react';
+import ThemeToggle from '../components/features/ThemeToggle';
+
+const { title = 'Bookshelf' } = Astro.props;
+const nav = [
+  { href: '/books', label: 'Books', icon: Library },
+  { href: '/authors', label: 'Authors', icon: Users },
+  { href: '/dashboard', label: 'Overview', icon: BarChart3 },
+  { href: '/status', label: 'Service status', icon: Activity },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="A considered space for your books and the people who write them." />
+    <title>{title} · Bookshelf</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      try {
+        document.documentElement.classList.toggle('dark', localStorage.getItem('bookshelf:theme') === 'dark');
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <aside class="sidebar">
+      <a class="brand" href="/books">
+        <span class="brand-icon"><BookOpen size={23} /></span>
+        <span>bookshelf<span class="brand-dot">.</span></span>
+      </a>
+      <div class="workspace-tag"><span class="live-dot"></span> Your local library</div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav aria-label="Main navigation">
+        {nav.map(({ href, label, icon: Icon }) => (
+          <a
+            href={href}
+            class:list={['nav-link', { active: Astro.url.pathname === href }]}
+            aria-current={Astro.url.pathname === href ? 'page' : undefined}
+          >
+            <Icon size={19} />{label}
+            {Astro.url.pathname === href && <span class="nav-active-dot"></span>}
+          </a>
+        ))}
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <BookOpen size={22} />
+          <p>A little order.<br />More room for stories.</p>
+        </div>
+        <ThemeToggle client:load />
+        <div class="sidebar-footer">Made for the love of books <span>↗</span></div>
+      </div>
+    </aside>
+    <div class="app-main">
+      <div class="topbar">
+        <span>YOUR COLLECTION, CONSIDERED.</span>
+        <a href="/status"><span class="live-dot"></span>Local workspace <ArrowUpRight size={14} /></a>
+      </div>
+      <main id="main"><slot /></main>
+      <footer class="main-footer">
+        <span>Bookshelf / A place for every story</span><span>Local by design</span>
+      </footer>
+    </div>
+  </body>
+</html>

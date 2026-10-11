@@ -1,0 +1,1646 @@
+{
+  "swagger": "2.0",
+  "x-id": [
+    "reitit.swagger/default"
+  ],
+  "info": {
+    "title": "Bookshelf API",
+    "version": "1.0.0",
+    "description": "Local books and authors learning service"
+  },
+  "paths": {
+    "/api/v1/health/live": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "enum": [
+                    "ok"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "tags": [
+          "health"
+        ],
+        "summary": "Process liveness (no dependency checks)"
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "unavailable"
+                  ]
+                },
+                "database": {
+                  "type": "boolean"
+                },
+                "redis": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "unavailable",
+                    "disabled"
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "database",
+                "redis"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "503": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "unavailable"
+                  ]
+                },
+                "database": {
+                  "type": "boolean"
+                },
+                "redis": {
+                  "type": "string",
+                  "enum": [
+                    "ok",
+                    "unavailable",
+                    "disabled"
+                  ]
+                }
+              },
+              "required": [
+                "status",
+                "database",
+                "redis"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "tags": [
+          "health"
+        ],
+        "summary": "PostgreSQL and enabled Redis readiness"
+      }
+    },
+    "/api/v1/books": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300,
+                    "x-allOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      },
+                      {
+                        "type": "string",
+                        "pattern": ".*\\S.*"
+                      }
+                    ]
+                  },
+                  "author-id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 9223372036854776000
+                  },
+                  "published-year": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 9999
+                  },
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 9223372036854776000
+                  }
+                },
+                "required": [
+                  "title",
+                  "author-id",
+                  "published-year",
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "description": "",
+            "type": "integer",
+            "required": false,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 100
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "description": "",
+            "type": "integer",
+            "required": false,
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          {
+            "in": "query",
+            "name": "author-id",
+            "description": "",
+            "type": "integer",
+            "required": false,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "description": "",
+            "type": "string",
+            "required": false,
+            "minLength": 1,
+            "maxLength": 300
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "",
+            "type": "string",
+            "required": false,
+            "enum": [
+              "id",
+              "title",
+              "published-year"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "description": "",
+            "type": "string",
+            "required": false,
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        ],
+        "tags": [
+          "books"
+        ],
+        "summary": "List books (default limit 20; maximum 100)"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "author-id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                },
+                "published-year": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9999
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "title",
+                "author-id",
+                "published-year",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "author-id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                },
+                "published-year": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9999
+                }
+              },
+              "required": [
+                "title",
+                "author-id",
+                "published-year"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tags": [
+          "books"
+        ],
+        "summary": "Create a book"
+      }
+    },
+    "/api/v1/books/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "author-id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                },
+                "published-year": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9999
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "title",
+                "author-id",
+                "published-year",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          }
+        ],
+        "tags": [
+          "books"
+        ],
+        "summary": "Get a book"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "author-id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                },
+                "published-year": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9999
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "title",
+                "author-id",
+                "published-year",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "author-id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                },
+                "published-year": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9999
+                }
+              },
+              "required": [
+                "title",
+                "author-id",
+                "published-year"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tags": [
+          "books"
+        ],
+        "summary": "Replace a book (all fields required)"
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          }
+        ],
+        "tags": [
+          "books"
+        ],
+        "summary": "Delete a book"
+      }
+    },
+    "/api/v1/authors": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300,
+                    "x-allOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      },
+                      {
+                        "type": "string",
+                        "pattern": ".*\\S.*"
+                      }
+                    ]
+                  },
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 9223372036854776000
+                  }
+                },
+                "required": [
+                  "name",
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "tags": [
+          "authors"
+        ],
+        "summary": "List authors"
+      },
+      "post": {
+        "responses": {
+          "201": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "name",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tags": [
+          "authors"
+        ],
+        "summary": "Create an author"
+      }
+    },
+    "/api/v1/authors/book-counts": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "author-id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 9223372036854776000
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "book-count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0
+                  },
+                  "refreshed-at": {
+                    "type": "string",
+                    "x-nullable": true
+                  }
+                },
+                "required": [
+                  "author-id",
+                  "name",
+                  "book-count",
+                  "refreshed-at"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "tags": [
+          "authors"
+        ],
+        "summary": "Read book counts and their last refresh time"
+      }
+    },
+    "/api/v1/authors/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "name",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          }
+        ],
+        "tags": [
+          "authors"
+        ],
+        "summary": "Get an author"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "minimum": 1,
+                  "maximum": 9223372036854776000
+                }
+              },
+              "required": [
+                "name",
+                "id"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300,
+                  "x-allOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    {
+                      "type": "string",
+                      "pattern": ".*\\S.*"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tags": [
+          "authors"
+        ],
+        "summary": "Replace an author's name"
+      },
+      "delete": {
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "409": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "422": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          },
+          "504": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "error"
+              ],
+              "additionalProperties": false
+            },
+            "description": ""
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "type": "integer",
+            "required": true,
+            "format": "int64",
+            "minimum": 1,
+            "maximum": 9223372036854776000
+          }
+        ],
+        "tags": [
+          "authors"
+        ],
+        "summary": "Delete an author (409 if books still reference it)"
+      }
+    }
+  },
+  "definitions": null
+}

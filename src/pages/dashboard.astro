@@ -1,0 +1,8 @@
+---
+import Page from '../components/features/rollup/Dashboard';
+import AppLayout from '../layouts/AppLayout.astro';
+import { serverConfig } from '../server/config';
+---
+<AppLayout title="Overview">
+  <Page staleSeconds={serverConfig().staleSeconds} client:load/>
+</AppLayout>

@@ -1,0 +1,21 @@
+name: bookshelf-workspace
+include:
+  - path: ${BOOKSHELF_API_PATH:-../bookshelf-api}/docker-compose.yaml
+services:
+  frontend:
+    build: .
+    environment:
+      BOOKSHELF_API_URL: http://api:3000
+      PORT: ${PORT:-5173}
+      HOST: 0.0.0.0
+      ROLLUP_STALE_SECONDS: ${ROLLUP_STALE_SECONDS:-60}
+    ports:
+      - "127.0.0.1:${PORT:-5173}:${PORT:-5173}"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+process.env.PORT+'/books').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
